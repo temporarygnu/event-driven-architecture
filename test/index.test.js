@@ -32,7 +32,7 @@ describe("Connection", () => {
 
     const authorization = false;
     const client = socketConnect(authorization);
-
+bb
     expect(connections.length).to.be.eql(0);
     done();
   });
