@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "outDir": "./dist",
+    "module": "commonjs",
+    "sourceMap": true,
+    "allowJs": false,
+    "noEmit": true,
+    "strict": true,
+    "types": ["node", "mocha"],
+    "isolatedModules": true
+  },
+
+  "include": ["src/**/*", "test/**/*"]
+}
