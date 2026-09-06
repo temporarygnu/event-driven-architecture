@@ -1,6 +1,6 @@
 import { encode } from "../../src/security";
 
-export type Token = UserToken | "fail";
+export type Token = UserToken | false;
 
 interface UserToken {
   account_type: number,
