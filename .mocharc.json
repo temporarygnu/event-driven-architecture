@@ -1,6 +1,4 @@
 {
-  "extensions": ["ts"],
-  "spec": "test/**/*.test.ts",
-  "import": "tsx",
-  "timeout": 5000
+  "$schema": "https://json.schemastore.org/mocharc.json",
+  "require": "tsx"
 }

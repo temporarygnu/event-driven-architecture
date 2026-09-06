@@ -2,13 +2,12 @@
   "name": "event-driven-architecture",
   "version": "1.0.1",
   "description": "A event driven archetecture api",
-  "main": "index.js",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
     "start": "tsc index.ts",
     "dev": "tsc --noEmit --watch index.ts",
-    "test": "npx mocha --exit 'test/**/*.test.ts'",
-    "test:watch": "npx mocha --watch --exit 'test/**/*.test.ts'",
+    "test": "mocha --exit --require tsx 'test/**/*.spec.ts'",
     "coverage": "nyc --reporter=html --reporter=text npm test"
   },
   "keywords": [
@@ -19,17 +18,20 @@
   "author": "@lukaswilkeer",
   "license": "MIT",
   "devDependencies": {
-    "@types/chai": "^5.2.3",
+    "@types/dirty-chai": "^2.0.5",
     "@types/mocha": "^10.0.10",
     "@types/node": "^26.4.1",
     "@types/sinon": "^22.0.0",
-    "chai": "^4.2.0",
+    "@types/socket.io-client": "^1.4.36",
+    "chai": "^6.2.2",
+    "dirty-chai": "^3.0.0",
     "eslint": "^8.7.0",
     "gulp": "^4.0.2",
     "mocha": "^12.0.0",
     "nyc": "^15.0.0",
     "sinon": "^8.1.1",
     "socket.io-client": "^2.3.0",
+    "ts-node": "^10.9.2",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   },
