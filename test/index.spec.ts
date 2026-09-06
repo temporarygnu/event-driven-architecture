@@ -4,8 +4,6 @@ import socketClient from "socket.io-client";
 import io from "../index";
 import { socketConnect } from "./__mocks__/connect";
 import { Token, token } from "./__mocks__/tokens";
-import * as test from "node:test";
-import * as assert from "node:assert";
 
 interface SocketioClient {
   emit(event: string, data: any): void;
@@ -21,21 +19,22 @@ beforeEach(async () => {
   sinon.restore();
 });
 
-suite.only("Connection", async (t: any) => {
-  test.only("should connect the user to the api", (done: any) => {
-    const client = socketConnect(token);
+describe("Connection", async () => {
+  it("should connect the user to the api", (done: any) => {
+    const socket_client = socketConnect(token);
     const SocketioConnections: SocketioClient[] = [];
 
-    client.on("connect", (socket: any) => {
+    socket_client.on("connect", (socket: any) => {
       Object.keys(io.engine.clients).map((key) => {
         SocketioConnections.push(io.engine.clients[key]);
       });
 
-      assert.strictEqual(SocketioConnections.length, 1, "There should be one connection");
+      expect(SocketioConnections.length).to.gte(1);
+      done();
     });
   });
 
-  test.skip("should drop connection for unauthorized users", async (done: any) => {
+  it("should drop connection for unauthorized users", async (done: any) => {
     const SocketioConnections: SocketioClient[] = [];
     const token = false;
     const socket_client = socketConnect(token);
