@@ -7,8 +7,8 @@
   "scripts": {
     "start": "tsc index.ts",
     "dev": "tsc --noEmit --watch index.ts",
-    "test": "mocha --exit --require tsx 'test/**/*.spec.ts'",
-    "coverage": "nyc --reporter=html --reporter=text npm test"
+    "test": "npx tsx --test 'test/**/*.spec.ts' --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info",
+    "test:coverage": "c8 --reporter=html --reporter=text npm test"
   },
   "keywords": [
     "event-driven",
@@ -18,20 +18,13 @@
   "author": "@lukaswilkeer",
   "license": "MIT",
   "devDependencies": {
-    "@types/dirty-chai": "^2.0.5",
-    "@types/mocha": "^10.0.10",
     "@types/node": "^26.4.1",
-    "@types/sinon": "^22.0.0",
     "@types/socket.io-client": "^1.4.36",
-    "chai": "^6.2.2",
-    "dirty-chai": "^3.0.0",
+    "c8": "^12.0.0",
     "eslint": "^8.7.0",
+    "glob": "^13.0.6",
     "gulp": "^4.0.2",
-    "mocha": "^12.0.0",
-    "nyc": "^15.0.0",
-    "sinon": "^8.1.1",
     "socket.io-client": "^2.3.0",
-    "ts-node": "^10.9.2",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   },

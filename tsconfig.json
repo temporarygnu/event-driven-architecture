@@ -2,14 +2,16 @@
   "compilerOptions": {
     "target": "ESNext",
     "outDir": "./dist",
-    "module": "commonjs",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
     "sourceMap": true,
     "allowJs": false,
     "noEmit": true,
     "strict": true,
-    "types": ["node", "mocha"],
-    "isolatedModules": true
+    "types": ["node"],
+    "isolatedModules": true,
   },
 
-  "include": ["src/**/*", "test/**/*"]
+  "include": ["./*.ts", "./src/**/*", "./test/**/*.ts"]
 }
