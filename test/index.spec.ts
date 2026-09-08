@@ -69,7 +69,7 @@ describe("Connection", async () => {
 
 
     async function delay_test(done: Function, socket_client: SocketIOClient.Socket): Promise<Function> {
-      return setTimeout((resolve: Function, reject: Function): PromiseFunction => {
+      setTimeout(async (resolve: Function, reject: Function): PromiseFunction => {
         Object.keys(io.engine.clients).map((key) => {
           SocketioConnections.push(io.engine.clients[key]);
         });
@@ -87,15 +87,9 @@ describe("Connection", async () => {
       }, 1000);
     };
 
-    //expect(false).to.be.true;
-    assert.strictEqual(true, false, "There should be no connections");
-    done();
-
-    /*
     return delay_test(done, socket_client)
       .then(client_test)
       .then(done());
-      */
   });
 
   it("should block users without permission headers", (done) => {
