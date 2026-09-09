@@ -6,7 +6,7 @@ import { describe, test, it } from "node:test";
 import * as assert from "node:assert/strict";
 
 interface SocketioClient {
-  emawait test(event: string, data: any): void;
+  emit(event: string, data: any): void;
   on(event: string, callback: (data: any) => void): void;
 }
 
