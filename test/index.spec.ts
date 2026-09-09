@@ -84,7 +84,7 @@ describe("Connection", async () => {
     const event = { event: "api.services.status" };
     let message: undefined | String = undefined;
     
-    client.emawait test("event", event);
+    client.emit("event", event);
 
     client.on("message", (data: String) => {
       message = data; 
