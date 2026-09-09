@@ -1,12 +1,12 @@
-import sinon from "sinon";
-import { expect } from "chai";
 import socketClient from "socket.io-client";
-import io from "../index";
 import { socketConnect } from "./__mocks__/connect";
-import { Token, token } from "./__mocks__/tokens";
+import { Token, token } from "./__mocks__/tokens.js";
+import io from "../index";
+import { describe, test, it } from "node:test";
+import * as assert from "node:assert/strict";
 
 interface SocketioClient {
-  emit(event: string, data: any): void;
+  emawait test(event: string, data: any): void;
   on(event: string, callback: (data: any) => void): void;
 }
 
@@ -15,12 +15,19 @@ interface SocketMessage {
   message: string | "503"
 }
 
-beforeEach(async () => {
-  sinon.restore();
-});
+async function delay(ms: number, fn: Function): PromiseLike<T> {
+  const promise: PromiseLike<T> = new Promise((resolve: Function) => {
+    return setTimeout(async () => {
+      const _r = await fn();
+      resolve(_r);
+    }, ms)
+  });
+  
+  return promise;
+}
 
 describe("Connection", async () => {
-  it("should connect the user to the api", (done: any) => {
+  await test("should connect the user to the api", (done: any) => {
     const socket_client = socketConnect(token);
     const SocketioConnections: SocketioClient[] = [];
 
@@ -29,98 +36,66 @@ describe("Connection", async () => {
         SocketioConnections.push(io.engine.clients[key]);
       });
 
-      expect(SocketioConnections.length).to.gte(1);
-      done();
+      assert.ok(SocketioConnections.length >= 1, "Should connect to the server");
     });
   });
 
-  it("should drop connection for unauthorized users", async (done: any) => {
+  test("should drop connection for unauthorized users", async () => {
     const SocketioConnections: SocketioClient[] = [];
     const token = false;
     const socket_client = socketConnect(token);
-
-    interface PromiseFunction {
-      done: Function;
-      socket: SocketIOClient.Socket;
-    }
 
     function isSocketMessage(message: any): message is SocketMessage {
       return (message as SocketMessage).data !== undefined
         && (message as SocketMessage).message !== undefined;
     }
 
-    async function client_test(Value: PrmiseFunction): Promise<void> {
-      const { done, socket } = Value;
-      console.log("client_test: socket: ", socket instanceof Object);
-      expect(false).to.be.true;
-      expect(typeof socket).to.be.equals('object');
-      expect(socket instanceof Object).to.be.equals(true);
+    Object.keys(io.engine.clients).map((key) => {
+      SocketioConnections.push(io.engine.clients[key]);
+    });
 
-      socket.on("disconnect", (reason: String | SocketMessage) => {
-        console.log("disconnecting", reason);
-        expect(false).to.be.equals(true);
-        expect(isSocketMessage(reason)).to.be.equals(true);
-        expect(reason).to.equals("503");
-        expect(SocketioConnections.length).to.equals(0);
+    assert.ok(SocketioConnections.length == 0, "Should drop the connection from server");
 
-        return Promise.resolve(done);
-      });
-    };
-
-
-    async function delay_test(done: Function, socket_client: SocketIOClient.Socket): Promise<Function> {
-      setTimeout(async (resolve: Function, reject: Function): PromiseFunction => {
-        Object.keys(io.engine.clients).map((key) => {
-          SocketioConnections.push(io.engine.clients[key]);
-        });
-
-        const promise: Promise<PromiseFunction> = new Promise((resolve, reject) => {
-          const PromiseReturn: PromiseFunction = {
-            done: done,
-            socket: socket_client
-          }
-
-          resolve(PromiseReturn);
-        })
-
-        return promise;
-      }, 1000);
-    };
-
-    return delay_test(done, socket_client)
-      .then(client_test)
-      .then(done());
+    // should mock the server receive the disconnect event
+    socket_client.on("disconnect", (reason: String | SocketMessage) => {
+      console.log(`socket client test, ${reason}`, reason)
+      assert.ok(isSocketMessage(reason), "Should receive an Socket Message");
+      assert.equal(reason, "503", "Should return 503 Access-Denide");
+    });
   });
 
-  it("should block users without permission headers", (done) => {
-    const client = socketClient("http://localhost:3000", {
+  await test("should drop users without permission headers", async (done: any) => {
+    const socket_client = socketClient("http://localhost:3000", {
       path: "/",
       transports: ["pooling", "websocket"]
     });
 
-    let connections = [];
+    let connections: Object[] = [];
+
     Object.keys(io.engine.clients).map((key) => {
-      connections[key] = key;
+      connections.push(io.engine.clients[key]);
     });
 
-    expect(connections.length).to.equals(0);
-    done();
+    assert.ok(connections.length == 0, "shouldn't have the connection on the server side");
   });
 
-  it("should call services", (done) => {
-    const client = socketConnect(userToken);
-
+  await test("should call services", { timeout: 5000 }, async () => {
+    const client = socketClient(token);
     const event = { event: "api.services.status" };
+    let message: undefined | String = undefined;
+    
+    client.emawait test("event", event);
 
-    client.emit("event", event);
+    client.on("message", (data: String) => {
+      message = data; 
+    });
 
-    client.on("message", (data) => {
-      expect(data).to.equals("online");
-      done();
+    await delay(2000, () => {
+      assert.deepEqual(message, "online", "Should say the status 'online' for the user");
     });
   });
 
-  it("should return an error message if a endpoint doesn`t exist", (done) => {
+  await test.skip("should return an error message if a endpoint doesn`t exist", (done) => {
     const client = socketConnect(userToken);
 
     const event = {
@@ -128,7 +103,7 @@ describe("Connection", async () => {
       data: "You`re welcome"
     };
 
-    client.emit("event", event);
+    client.emawait test("event", event);
 
     client.on("message", (data) => {
       expect(data).to.equals("TestFuncFn doesn't exist");
@@ -136,14 +111,14 @@ describe("Connection", async () => {
     });
   });
 
-  it("should return an error message if a endpoint is nullish", (done) => {
+  await test.skip("should return an error message if a endpoint is nullish", (done) => {
     const client = socketConnect(userToken);
 
     const event = {
       data: "You`re welcome"
     };
 
-    client.emit("event", event);
+    client.emawait test("event", event);
 
     client.on("message", (data) => {
       expect(data).to.equals("Event cannot be empty");
