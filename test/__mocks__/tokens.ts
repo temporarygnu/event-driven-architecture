@@ -1,4 +1,4 @@
-import { encode } from "../../src/security";
+import { encode } from "../../src/security.js";
 
 export type Token = UserToken | false;
 
