@@ -1,24 +1,24 @@
-{
-  "name": "event-driven-architecture",
+{ "name": "sequoia-http-interface-mock",
   "version": "1.0.1",
-  "description": "A event driven archetecture api",
+  "description": "A simple Sequoia-db HTTP implementation",
   "main": "index.ts",
   "type": "module",
   "scripts": {
     "start": "tsc index.ts",
     "dev": "tsc --noEmit --watch index.ts",
-    "test": "npx tsx --test 'test/**/*.spec.ts' --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info",
+    "test": "npx tsx --test --test-force-exit --test-reporter=spec 'test/**/*.spec.ts'",
     "test:coverage": "c8 --reporter=html --reporter=text npm test"
   },
   "keywords": [
-    "event-driven",
-    "socket",
+    "database",
+    "http",
+    "mock",
     "api"
   ],
-  "author": "@lukaswilkeer",
+  "author": "@temporarygnuaddr",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^26.4.1",
+    "@types/node": "^26.5.1",
     "@types/socket.io-client": "^1.4.36",
     "c8": "^12.0.0",
     "eslint": "^8.7.0",
